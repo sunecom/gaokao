@@ -10,6 +10,9 @@ interface DecisionTreeOptions {
   location?: "local" | "outside" | "any";
   major_direction?: string[];
   school_level?: string[];
+  school_type?: string[];
+  location_preference?: string[];
+  tier_strategy?: "aggressive" | "balanced" | "conservative" | "safe";
   tuition_budget?: "low" | "medium" | "high" | "no_limit";
 }
 
@@ -29,9 +32,11 @@ interface Suggestion {
   // 额外字段（用于过滤）
   school_type?: string;
   school_tags?: string[];
+  school_category?: string;
   major_category?: string;
   tuition?: number;
-  province?: string;
+  province?: string;  // 考生省份（保留兼容）
+  school_province?: string;  // 院校所在省份
 }
 
 /**
@@ -50,7 +55,7 @@ function matchesFilter(
     }
   }
 
-  // 地点偏好
+  // 地点偏好（旧版兼容）
   if (options.location === "local" && item.province && item.province !== userProvince) {
     return false;
   }
@@ -58,19 +63,61 @@ function matchesFilter(
     return false;
   }
 
+  // 地域偏好（新版多选）
+  if (options.location_preference && options.location_preference.length > 0) {
+    const prefs = options.location_preference;
+    
+    // 如果选了"不限地域"，跳过筛选
+    if (!prefs.includes("no_preference")) {
+      // 使用院校所在省份进行筛选
+      const schoolProvince = item.school_province || "";
+      let match = false;
+      
+      for (const pref of prefs) {
+        if (pref === "local" && schoolProvince === userProvince) {
+          match = true;
+          break;
+        }
+        // 城市/地区映射
+        const cityMap: Record<string, string[]> = {
+          beijing: ["北京"],
+          shanghai: ["上海"],
+          jiangzhehu: ["江苏", "浙江", "上海"],
+          guangdong: ["广东"],
+          wuhan: ["湖北"],
+          nanjing: ["江苏"],
+          xian: ["陕西"],
+          chengdu: ["四川", "重庆"],
+          dongbei: ["辽宁", "吉林", "黑龙江"],
+        };
+        
+        const provinces = cityMap[pref] || [];
+        if (provinces.includes(schoolProvince)) {
+          match = true;
+          break;
+        }
+      }
+      
+      if (!match) {
+        return false;
+      }
+    }
+  }
+
   // 专业方向（多选）
   if (options.major_direction && options.major_direction.length > 0) {
     const selectedCategories = options.major_direction;
     const majorLower = item.major.toLowerCase();
     const categoryKeywords: Record<string, string[]> = {
-      engineering: ["计算机", "电子", "机械", "土木", "自动化", "电气", "软件"],
-      science: ["数学", "物理", "化学", "生物"],
-      medicine: ["临床", "口腔", "药学", "医学"],
-      business: ["经济", "金融", "会计", "管理", "工商"],
-      arts: ["中文", "历史", "哲学", "外语", "英语"],
-      law: ["法学", "政治"],
-      education: ["教育", "心理"],
-      agriculture: ["农学", "林学", "园艺"],
+      engineering: ["计算机", "电子", "机械", "土木", "自动化", "电气", "软件", "工程"],
+      science: ["数学", "物理", "化学", "生物", "统计"],
+      medicine: ["临床", "口腔", "药学", "医学", "护理", "中医"],
+      business: ["经济", "金融", "会计", "管理", "工商", "财务", "市场"],
+      arts: ["中文", "历史", "哲学", "外语", "英语", "文学"],
+      law: ["法学", "政治", "社会学"],
+      education: ["教育", "心理", "学前"],
+      agriculture: ["农学", "林学", "园艺", "畜牧", "兽医"],
+      art_design: ["设计", "音乐", "美术", "传媒", "艺术", "动画"],
     };
 
     const hasMatchingCategory = selectedCategories.some((cat) => {
@@ -91,20 +138,47 @@ function matchesFilter(
 
     // 数据无标签时跳过此筛选（避免误杀全部结果）
     if (tags.length === 0 && !type) {
-      return true;
+      // 继续
+    } else {
+      const hasMatchingLevel = selectedLevels.some((level) => {
+        if (level === "985") return tags.includes("985");
+        if (level === "211") return tags.includes("211") || tags.includes("985");
+        if (level === "double_first") return tags.includes("985") || tags.includes("211") || tags.includes("double_first");
+        if (level === "provincial") return type === "provincial_key" || type === "公办";
+        if (level === "private") return type === "private" || type === "民办";
+        return true;
+      });
+
+      if (!hasMatchingLevel) {
+        return false;
+      }
     }
+  }
 
-    const hasMatchingLevel = selectedLevels.some((level) => {
-      if (level === "985") return tags.includes("985");
-      if (level === "211") return tags.includes("211") || tags.includes("985");
-      if (level === "double_first") return tags.includes("985") || tags.includes("211") || tags.includes("double_first");
-      if (level === "provincial") return type === "provincial_key" || type === "公办";
-      if (level === "private") return type === "private" || type === "民办";
-      return true;
-    });
+  // 院校类型（多选）
+  if (options.school_type && options.school_type.length > 0) {
+    const selectedTypes = options.school_type;
+    const category = item.school_category || "";
+    
+    // 数据无类型时跳过此筛选
+    if (!category) {
+      // 继续
+    } else {
+      const hasMatchingType = selectedTypes.some((t) => {
+        if (t === "comprehensive") return category.includes("综合");
+        if (t === "science_engineering") return category.includes("理工") || category.includes("工科");
+        if (t === "normal") return category.includes("师范");
+        if (t === "medical") return category.includes("医药") || category.includes("医学");
+        if (t === "finance_economics") return category.includes("财经") || category.includes("经济");
+        if (t === "politics_law") return category.includes("政法");
+        if (t === "agriculture") return category.includes("农林");
+        if (t === "language") return category.includes("语言") || category.includes("外语");
+        return true;
+      });
 
-    if (!hasMatchingLevel) {
-      return false;
+      if (!hasMatchingType) {
+        return false;
+      }
     }
   }
 
@@ -123,6 +197,46 @@ function matchesFilter(
   }
 
   return true;
+}
+
+/**
+ * 根据冲稳保策略筛选
+ */
+function applyTierStrategy(
+  items: Suggestion[],
+  strategy?: "aggressive" | "balanced" | "conservative" | "safe"
+): Suggestion[] {
+  if (!strategy) return items;
+
+  // 策略比例：冲/小冲/稳/保/垫
+  const strategyRatios: Record<string, Record<string, number>> = {
+    aggressive: { "冲": 0.4, "小冲": 0.3, "稳": 0.2, "保": 0.08, "垫": 0.02 },
+    balanced: { "冲": 0.2, "小冲": 0.2, "稳": 0.3, "保": 0.2, "垫": 0.1 },
+    conservative: { "冲": 0.1, "小冲": 0.15, "稳": 0.35, "保": 0.3, "垫": 0.1 },
+    safe: { "冲": 0.05, "小冲": 0.1, "稳": 0.3, "保": 0.35, "垫": 0.2 },
+  };
+
+  const ratios = strategyRatios[strategy];
+  if (!ratios) return items;
+
+  // 按 tier 分组
+  const grouped: Record<string, Suggestion[]> = {};
+  for (const item of items) {
+    if (!grouped[item.tier]) grouped[item.tier] = [];
+    grouped[item.tier].push(item);
+  }
+
+  // 计算每个 tier 应该保留的数量（基于总数 100）
+  const totalCount = 100;
+  const result: Suggestion[] = [];
+
+  for (const [tier, ratio] of Object.entries(ratios)) {
+    const count = Math.round(totalCount * ratio);
+    const tierItems = grouped[tier] || [];
+    result.push(...tierItems.slice(0, count));
+  }
+
+  return result;
 }
 
 /**
@@ -178,6 +292,7 @@ export async function POST(request: NextRequest) {
         risk: "请核对招生章程和计划变化",
         school_type: item.school_type,
         school_tags: item.school_tags || [],
+        school_province: item.school_province || "",
         major_category: item.major_category || "",
         tuition: item.tuition || 0,
         province: item.province || province,

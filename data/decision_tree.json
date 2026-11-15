@@ -10,27 +10,27 @@
         { "value": "reject", "label": "不接受调剂", "description": "只报考把握大的专业，避免被调剂" }
       ]
     },
-
     {
       "id": "major_direction",
       "title": "专业方向",
-      "description": "你对哪个领域更感兴趣？",
+      "description": "你对哪个领域更感兴趣？（可多选）",
       "type": "multi",
       "options": [
-        { "value": "engineering", "label": "工科", "description": "计算机、电子、机械、土木等" },
+        { "value": "engineering", "label": "工科", "description": "计算机、电子、机械、土木、自动化、电气等" },
         { "value": "science", "label": "理科", "description": "数学、物理、化学、生物等基础学科" },
-        { "value": "medicine", "label": "医学", "description": "临床、口腔、药学等" },
+        { "value": "medicine", "label": "医学", "description": "临床、口腔、药学、护理等" },
         { "value": "business", "label": "商科", "description": "经济、金融、会计、管理等" },
         { "value": "arts", "label": "文科", "description": "中文、历史、哲学、外语等" },
         { "value": "law", "label": "法学", "description": "法学、政治学等" },
         { "value": "education", "label": "师范", "description": "教育学、心理学等" },
-        { "value": "agriculture", "label": "农林", "description": "农学、林学、园艺等" }
+        { "value": "agriculture", "label": "农林", "description": "农学、林学、园艺等" },
+        { "value": "art_design", "label": "艺术", "description": "设计、音乐、美术、传媒等" }
       ]
     },
     {
       "id": "school_level",
       "title": "院校层次",
-      "description": "你希望考入什么层次的院校？",
+      "description": "你希望考入什么层次的院校？（可多选）",
       "type": "multi",
       "options": [
         { "value": "985", "label": "985 高校", "description": "国内顶尖名校" },
@@ -38,6 +38,53 @@
         { "value": "double_first", "label": "双一流", "description": "双一流建设高校（含 985/211）" },
         { "value": "provincial", "label": "省属重点", "description": "各省属重点本科院校" },
         { "value": "private", "label": "民办本科", "description": "民办本科院校" }
+      ]
+    },
+    {
+      "id": "school_type",
+      "title": "院校类型",
+      "description": "你偏好什么类型的院校？（可多选）",
+      "type": "multi",
+      "options": [
+        { "value": "comprehensive", "label": "综合类", "description": "学科齐全的综合性大学" },
+        { "value": "science_engineering", "label": "理工类", "description": "以理工科为主的院校" },
+        { "value": "normal", "label": "师范类", "description": "以师范教育为特色的院校" },
+        { "value": "medical", "label": "医药类", "description": "以医学为主的院校" },
+        { "value": "finance_economics", "label": "财经类", "description": "以财经学科为特色的院校" },
+        { "value": "politics_law", "label": "政法类", "description": "以政法学科为特色的院校" },
+        { "value": "agriculture", "label": "农林类", "description": "以农林学科为特色的院校" },
+        { "value": "language", "label": "语言类", "description": "以外语为特色的院校" }
+      ]
+    },
+    {
+      "id": "location_preference",
+      "title": "地域偏好",
+      "description": "你希望去哪里上学？（可多选）",
+      "type": "multi",
+      "options": [
+        { "value": "local", "label": "本省优先", "description": "优先选择本省院校" },
+        { "value": "beijing", "label": "北京", "description": "首都，教育资源最集中" },
+        { "value": "shanghai", "label": "上海", "description": "国际化大都市，金融/贸易中心" },
+        { "value": "jiangzhehu", "label": "江浙沪", "description": "经济发达，就业机会多" },
+        { "value": "guangdong", "label": "广东", "description": "粤港澳大湾区，创新活力强" },
+        { "value": "wuhan", "label": "武汉", "description": "大学城，高校密集" },
+        { "value": "nanjing", "label": "南京", "description": "六朝古都，文化底蕴深厚" },
+        { "value": "xian", "label": "西安", "description": "西北重镇，高校众多" },
+        { "value": "chengdu", "label": "成都/重庆", "description": "西南中心，生活舒适" },
+        { "value": "dongbei", "label": "东北", "description": "老牌工业基地，985/211 性价比高" },
+        { "value": "no_preference", "label": "不限地域", "description": "全国范围选择" }
+      ]
+    },
+    {
+      "id": "tier_strategy",
+      "title": "冲稳保策略",
+      "description": "你希望志愿方案的风险偏好？",
+      "type": "single",
+      "options": [
+        { "value": "aggressive", "label": "激进型（多冲）", "description": "冲 40% / 稳 30% / 保 20% / 垫 10%，搏一搏好学校" },
+        { "value": "balanced", "label": "均衡型", "description": "冲 20% / 稳 40% / 保 30% / 垫 10%，攻守兼备" },
+        { "value": "conservative", "label": "保守型（求稳）", "description": "冲 10% / 稳 40% / 保 35% / 垫 15%，确保录取" },
+        { "value": "safe", "label": "极稳型", "description": "冲 5% / 稳 30% / 保 40% / 垫 25%，绝不滑档" }
       ]
     },
     {
@@ -52,34 +99,5 @@
         { "value": "no_limit", "label": "不考虑学费", "description": "优先选学校和专业的质量" }
       ]
     }
-  ],
-  "filter_rules": {
-    "adjustment": {
-      "accept": { "accept_adjustment": true },
-      "reject": { "accept_adjustment": false }
-    },
-    "major_direction": {
-      "engineering": { "major_category": ["computer", "electronic", "mechanical", "civil"] },
-      "science": { "major_category": ["math", "physics", "chemistry", "biology"] },
-      "medicine": { "major_category": ["clinical", "stomatology", "pharmacy"] },
-      "business": { "major_category": ["economics", "finance", "accounting", "management"] },
-      "arts": { "major_category": ["chinese", "history", "philosophy", "foreign_language"] },
-      "law": { "major_category": ["law", "political_science"] },
-      "education": { "major_category": ["education", "psychology"] },
-      "agriculture": { "major_category": ["agriculture", "forestry", "horticulture"] }
-    },
-    "school_level": {
-      "985": { "school_tags": ["985"] },
-      "211": { "school_tags": ["211"] },
-      "double_first": { "school_tags": ["985", "211", "double_first"] },
-      "provincial": { "school_type": "provincial_key" },
-      "private": { "school_type": "private" }
-    },
-    "tuition_budget": {
-      "low": { "max_tuition": 5000 },
-      "medium": { "max_tuition": 15000 },
-      "high": { "max_tuition": 999999 },
-      "no_limit": { "max_tuition": 999999 }
-    }
-  }
+  ]
 }
