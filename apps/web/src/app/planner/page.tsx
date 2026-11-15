@@ -75,13 +75,21 @@ function PlannerContent() {
 
   const [loading, setLoading] = useState(true);
   const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
-
-  // 暴露数据给全局，供导出使用
-  useEffect(() => {
-    (window as any).__gaokao_suggestions__ = suggestions;
-  }, [suggestions]);
   const [conversions, setConversions] = useState<ConversionResult[]>([]);
   const [totalCount, setTotalCount] = useState(0);
+
+  // 数量限制（100/200/300）
+  const [limit, setLimit] = useState(100);
+  // 已选中的条目（key = tier|school|major）
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+
+  // 生成条目唯一 key
+  const itemKey = (s: Suggestion) => `${s.tier}|${s.school}|${s.major}`;
+
+  // 数据变化时默认全选
+  useEffect(() => {
+    setSelected(new Set(suggestions.map(itemKey)));
+  }, [suggestions]);
 
   // 决策树状态
   const [treeConfig, setTreeConfig] = useState<DecisionTreeConfig | null>(null);
@@ -156,6 +164,7 @@ function PlannerContent() {
         body: JSON.stringify({
           province, rank: parseInt(rank), track: trackCN, year,
           options: filters,
+          limit,
         }),
       });
       if (res.ok) {
@@ -372,12 +381,33 @@ function PlannerContent() {
         </div>
       ) : (
         <>
-          {/* 结果统计 */}
-          <div className="text-sm text-slate-500 mb-4">
-            共 {totalCount} 个推荐
-            {filterActive && suggestions.length !== totalCount && (
-              <span className="ml-2">（筛选后 {suggestions.length} 个）</span>
-            )}
+          {/* 结果统计和数量选择 */}
+          <div className="flex items-center justify-between mb-4">
+            <div className="text-sm text-slate-500">
+              共 {totalCount} 个推荐
+              {filterActive && suggestions.length !== totalCount && (
+                <span className="ml-2">（筛选后 {suggestions.length} 个）</span>
+              )}
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-slate-600">显示数量：</span>
+              {[100, 200, 300].map((n) => (
+                <button
+                  key={n}
+                  onClick={() => {
+                    setLimit(n);
+                    applyFilter();
+                  }}
+                  className={`px-3 py-1 text-sm rounded-lg transition-colors cursor-pointer ${
+                    limit === n
+                      ? "bg-sky-600 text-white"
+                      : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                  }`}
+                >
+                  {n}
+                </button>
+              ))}
+            </div>
           </div>
 
           {/* 推荐列表 */}
@@ -392,17 +422,36 @@ function PlannerContent() {
                     <span className="text-sm font-normal text-slate-400">({items.length}个)</span>
                   </h2>
                   <div className="space-y-3">
-                    {items.map((item, i) => (
-                      <div key={i} className={`rounded-xl border p-4 ${TIER_COLORS[item.tier]}`}>
-                        <div className="flex items-start justify-between mb-2">
-                          <div>
-                            <span className="font-semibold text-base">{item.school}</span>
-                            <span className="text-sm ml-2 opacity-75">{item.major}</span>
-                          </div>
-                          <span className="text-xs px-2 py-0.5 rounded-full bg-white/60">
-                            历史最低位次 {item.min_rank.toLocaleString()}
-                          </span>
-                        </div>
+                    {items.map((item, i) => {
+                      const key = itemKey(item);
+                      const isSelected = selected.has(key);
+                      return (
+                        <div key={i} className={`rounded-xl border p-4 ${TIER_COLORS[item.tier]} ${!isSelected ? 'opacity-50' : ''}`}>
+                          <div className="flex items-start gap-3">
+                            <input
+                              type="checkbox"
+                              checked={isSelected}
+                              onChange={() => {
+                                const newSelected = new Set(selected);
+                                if (isSelected) {
+                                  newSelected.delete(key);
+                                } else {
+                                  newSelected.add(key);
+                                }
+                                setSelected(newSelected);
+                              }}
+                              className="mt-1 w-4 h-4 cursor-pointer"
+                            />
+                            <div className="flex-1">
+                              <div className="flex items-start justify-between mb-2">
+                                <div>
+                                  <span className="font-semibold text-base">{item.school}</span>
+                                  <span className="text-sm ml-2 opacity-75">{item.major}</span>
+                                </div>
+                                <span className="text-xs px-2 py-0.5 rounded-full bg-white/60">
+                                  历史最低位次 {item.min_rank.toLocaleString()}
+                                </span>
+                              </div>
                         <div className="text-sm space-y-1.5 opacity-80">
                           <p>位次差：{item.gap > 0 ? `+${item.gap.toLocaleString()}` : item.gap.toLocaleString()} | 
                           置信度：{item.confidence}{item.school_province ? ` | ${item.school_province}` : ""}</p>
@@ -432,8 +481,11 @@ function PlannerContent() {
                           )}
                           <p className="text-xs text-amber-600/60 mt-0.5">⚠️ {item.risk}</p>
                         </div>
-                      </div>
-                    ))}
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
               );
@@ -443,12 +495,21 @@ function PlannerContent() {
       )}
 
       {/* 导出按钮 */}
-      <div className="mt-8 flex justify-center">
+      <div className="mt-8 flex justify-center gap-4">
         <button
-          onClick={() => exportToCSV(filters)}
+          onClick={() => {
+            const allKeys = new Set(suggestions.map(itemKey));
+            exportToCSV(filters, allKeys);
+          }}
           className="px-6 py-3 bg-sky-600 hover:bg-sky-700 text-white font-semibold rounded-xl transition-colors cursor-pointer shadow-lg"
         >
-          📥 导出志愿方案 (CSV)
+          📥 导出全部 ({suggestions.length})
+        </button>
+        <button
+          onClick={() => exportToCSV(filters, selected)}
+          className="px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-xl transition-colors cursor-pointer shadow-lg"
+        >
+          📥 导出选中 ({selected.size})
         </button>
       </div>
 
@@ -467,7 +528,7 @@ function PlannerContent() {
   );
 }
 
-function exportToCSV(filters?: FilterSelections) {
+function exportToCSV(filters?: FilterSelections, selectedKeys?: Set<string>) {
   const params = new URLSearchParams(window.location.search);
   const province = params.get("province") || "";
   const rank = params.get("rank") || "";
@@ -478,10 +539,13 @@ function exportToCSV(filters?: FilterSelections) {
     return;
   }
 
-  // 带上筛选条件，保证与网页结果一致
+  // 带上筛选条件和选中的 key，保证与网页结果一致
   let url = `/api/export?province=${encodeURIComponent(province)}&rank=${rank}&year=${year}`;
   if (filters && Object.keys(filters).length > 0) {
     url += `&options=${encodeURIComponent(JSON.stringify(filters))}`;
+  }
+  if (selectedKeys && selectedKeys.size > 0) {
+    url += `&selected=${encodeURIComponent(JSON.stringify(Array.from(selectedKeys)))}`;
   }
   window.location.href = url;
 }

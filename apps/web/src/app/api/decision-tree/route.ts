@@ -258,7 +258,10 @@ function applyTierStrategy(
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { province, rank, track, year, options } = body;
+    const { province, rank, track, year, options, limit: rawLimit } = body;
+
+    // 数量限制：100/200/300，默认 100
+    const limit = [100, 200, 300].includes(rawLimit) ? rawLimit : 100;
 
     if (!province || !rank) {
       return NextResponse.json({ error: "请提供省份和位次" }, { status: 400 });
@@ -333,11 +336,12 @@ export async function POST(request: NextRequest) {
     });
 
     return NextResponse.json({
-      suggestions: strategized.slice(0, 100),
+      suggestions: strategized.slice(0, limit),
       total: strategized.length,
       original_total: scored.length,
       profile: { province, rank, track, year },
       filter_applied: Object.keys(options || {}).length > 0,
+      limit,
     });
   } catch (error) {
     return NextResponse.json({ error: "服务器错误", detail: String(error) }, { status: 500 });

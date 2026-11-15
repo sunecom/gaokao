@@ -178,6 +178,7 @@ export async function GET(request: NextRequest) {
   const rank = rankStr ? parseInt(rankStr) : 0;
   const year = searchParams.get("year") || "2026";
   const optionsJson = searchParams.get("options") || "";
+  const selectedJson = searchParams.get("selected") || "";
 
   if (!province || !rank) {
     return NextResponse.json({ error: "缺少参数" }, { status: 400 });
@@ -186,6 +187,16 @@ export async function GET(request: NextRequest) {
   let options: DecisionTreeOptions = {};
   try {
     if (optionsJson) options = JSON.parse(decodeURIComponent(optionsJson));
+  } catch {}
+
+  let selectedKeys: Set<string> | null = null;
+  try {
+    if (selectedJson) {
+      const arr = JSON.parse(decodeURIComponent(selectedJson));
+      if (Array.isArray(arr) && arr.length > 0) {
+        selectedKeys = new Set(arr);
+      }
+    }
   } catch {}
 
   // 加载数据
@@ -253,11 +264,20 @@ export async function GET(request: NextRequest) {
     return Math.abs(a.gap) - Math.abs(b.gap);
   });
 
+  // 如果传了 selected，只导出选中的条目
+  let finalList = strategized;
+  if (selectedKeys) {
+    finalList = strategized.filter((s) => {
+      const key = `${s.tier}|${s.school}|${s.major}`;
+      return selectedKeys!.has(key);
+    });
+  }
+
   // 生成 CSV
   const header = "梯度,学校,专业,历史最低位次,位次差,位次差%,院校省份,保研率,起薪(元/月),就业率";
   const csvRows = [
     header,
-    ...strategized.map((s) => {
+    ...finalList.map((s) => {
       const extra = extraData[s.school] || {};
       return [
         `"${s.tier}"`,
