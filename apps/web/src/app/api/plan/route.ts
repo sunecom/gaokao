@@ -215,7 +215,7 @@ export async function GET(request: NextRequest) {
   });
 
   return NextResponse.json({
-    suggestions: scored.slice(0, 30),
+    suggestions: scored.slice(0, 100),
     total: scored.length,
     profile: { province, rank, track: "physics", year: searchParams.get("year") || "2026" },
   });

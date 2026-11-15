@@ -192,7 +192,7 @@ export async function POST(request: NextRequest) {
     filtered.sort((a, b) => (tierOrder[a.tier] ?? 99) - (tierOrder[b.tier] ?? 99));
 
     return NextResponse.json({
-      suggestions: filtered.slice(0, 30),
+      suggestions: filtered.slice(0, 100),
       total: filtered.length,
       original_total: scored.length,
       profile: { province, rank, track, year },
