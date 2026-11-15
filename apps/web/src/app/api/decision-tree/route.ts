@@ -89,6 +89,11 @@ function matchesFilter(
     const tags = item.school_tags || [];
     const type = item.school_type || "";
 
+    // 数据无标签时跳过此筛选（避免误杀全部结果）
+    if (tags.length === 0 && !type) {
+      return true;
+    }
+
     const hasMatchingLevel = selectedLevels.some((level) => {
       if (level === "985") return tags.includes("985");
       if (level === "211") return tags.includes("211") || tags.includes("985");
@@ -165,7 +170,11 @@ export async function POST(request: NextRequest) {
         gap,
         gap_ratio: Math.round(gapRatio * 1000) / 1000,
         confidence,
-        reason: `${item.school_type}院校`,
+        reason: item.school_type
+          ? `${item.school_type}院校`
+          : item.subject_require
+            ? `选考科目：${item.subject_require}`
+            : "位次匹配推荐",
         risk: "请核对招生章程和计划变化",
         school_type: item.school_type,
         school_tags: item.school_tags || [],
