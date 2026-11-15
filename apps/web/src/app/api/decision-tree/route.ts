@@ -262,19 +262,25 @@ export async function POST(request: NextRequest) {
     }
 
     // 计算每个学校的风险等级
-    const scored = schools.map((item: any) => {
-      const minRank = item.min_rank || 99999;
-      const gap = minRank - rank;
-      const gapRatio = gap / rank;
+    const scored = schools
+      .filter((item: any) => {
+        const minRank = item.min_rank || 99999;
+        const gapRatio = (minRank - rank) / rank;
+        return gapRatio >= -0.20; // 排除差距太大的
+      })
+      .map((item: any) => {
+        const minRank = item.min_rank || 99999;
+        const gap = minRank - rank;
+        const gapRatio = gap / rank;
 
-      let tier = "垫";
-      if (gapRatio < -0.05) tier = "冲";
-      else if (gapRatio < 0.03) tier = "小冲";
-      else if (gapRatio < 0.15) tier = "稳";
-      else if (gapRatio < 0.35) tier = "保";
+        let tier = "垫";
+        if (gapRatio < -0.05) tier = "冲";
+        else if (gapRatio < 0.03) tier = "小冲";
+        else if (gapRatio < 0.15) tier = "稳";
+        else if (gapRatio < 0.35) tier = "保";
 
       const confidence =
-        gapRatio < -0.05 ? "低" : gapRatio < 0.03 ? "中" : gapRatio < 0.15 ? "高" : "很高";
+        gapRatio < -0.15 ? "极低" : gapRatio < -0.05 ? "低" : gapRatio < 0.03 ? "中" : gapRatio < 0.15 ? "高" : "很高";
 
       return {
         tier,

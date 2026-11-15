@@ -104,6 +104,7 @@ function checkRetireRisk(
 function tierFor(studentRank: number, minRank: number): { tier: string; gap: number; gapRatio: number } {
   const gap = minRank - studentRank;
   const gapRatio = gap / studentRank;
+  if (gapRatio < -0.20) return { tier: "垫", gap, gapRatio }; // 差距太大，不推荐
   if (gapRatio < -0.05) return { tier: "冲", gap, gapRatio };
   if (gapRatio < 0.03) return { tier: "小冲", gap, gapRatio };
   if (gapRatio < 0.15) return { tier: "稳", gap, gapRatio };
@@ -160,10 +161,18 @@ export async function GET(request: NextRequest) {
   const extraData = loadExtraData();
 
   // 位次匹配 + 风险评分 + 退档风险检查 + 补充数据
-  const scored = schools.map((item: any) => {
-    const minRank = item.min_rank || 99999;
-    const { tier, gap, gapRatio } = tierFor(rank, minRank);
-    const confidence = gapRatio < -0.05 ? "低" : gapRatio < 0.03 ? "中" : gapRatio < 0.15 ? "高" : "很高";
+  const scored = schools
+    .filter((item: any) => {
+      const minRank = item.min_rank || 99999;
+      const gap = minRank - rank;
+      const gapRatio = gap / rank;
+      return gapRatio >= -0.20; // 排除差距太大的
+    })
+    .map((item: any) => {
+      const minRank = item.min_rank || 99999;
+      const { tier, gap, gapRatio } = tierFor(rank, minRank);
+
+      const confidence = gapRatio < -0.15 ? "极低" : gapRatio < -0.05 ? "低" : gapRatio < 0.03 ? "中" : gapRatio < 0.15 ? "高" : "很高";
 
     const extra = extraData[item.school_name];
     
