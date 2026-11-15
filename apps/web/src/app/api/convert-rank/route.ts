@@ -101,17 +101,29 @@ export async function GET(request: NextRequest) {
   // 动态生成目标年份：当前年份往前推
   const targetYears: string[] = [];
   const startYear = parseInt(year);
-  for (let y = startYear; y >= startYear - 2 && y >= 2022; y--) {
-    targetYears.push(String(y));
-  }
   
-  // 2027年及以后用最新真实数据模拟
+  // 如果选的是未来年份（如2027），用最新真实数据模拟
   if (startYear > 2026) {
-    targetYears.push("2026");
+    targetYears.push(String(startYear)); // 显示2027年
+    targetYears.push("2026"); // 用2026年数据模拟
+    targetYears.push("2025");
+  } else {
+    // 正常年份：当年 + 前两年
+    for (let y = startYear; y >= startYear - 2 && y >= 2022; y--) {
+      targetYears.push(String(y));
+    }
   }
 
   for (const targetYear of targetYears) {
-    const table = loadRankTable(province, track, targetYear);
+    let table = loadRankTable(province, track, targetYear);
+    let isSimulated = false;
+    
+    // 未来年份没有数据时，用最新真实数据模拟
+    if (table.length === 0 && parseInt(targetYear) > 2026) {
+      table = loadRankTable(province, track, "2026");
+      isSimulated = true;
+    }
+    
     if (table.length === 0) {
       results.push({
         year: targetYear,
@@ -139,7 +151,7 @@ export async function GET(request: NextRequest) {
     results.push({
       year: targetYear,
       equivalent_score: eqScore,
-      note: `基于${targetYear}年一分一段表换算`,
+      note: isSimulated ? `基于2026年数据模拟（${targetYear}年数据尚未公布）` : `基于${targetYear}年一分一段表换算`,
     });
   }
 

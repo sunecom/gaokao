@@ -185,7 +185,11 @@ export async function GET(request: NextRequest) {
       gap,
       gap_ratio: Math.round(gapRatio * 1000) / 1000,
       confidence,
-      reason: `${item.school_type}院校`,
+      reason: item.school_type
+        ? `${item.school_type}院校${item.subject_require ? ` · 选考${item.subject_require}` : ""}`
+        : item.subject_require
+          ? `选考科目：${item.subject_require}`
+          : "位次匹配推荐",
       risk: "请核对招生章程和计划变化",
       // P0-1: 退档风险预警
       retire_risk_warnings: retireRisk.warnings,
@@ -201,9 +205,14 @@ export async function GET(request: NextRequest) {
     };
   });
 
-  // 按 tier 排序
+  // 按 tier 排序，同 tier 内按位次接近度排序（gap_ratio 绝对值小的优先）
   const tierOrder: Record<string, number> = { "冲": 0, "小冲": 1, "稳": 2, "保": 3, "垫": 4 };
-  scored.sort((a, b) => (tierOrder[a.tier] ?? 99) - (tierOrder[b.tier] ?? 99));
+  scored.sort((a, b) => {
+    const tierDiff = (tierOrder[a.tier] ?? 99) - (tierOrder[b.tier] ?? 99);
+    if (tierDiff !== 0) return tierDiff;
+    // 同 tier 内，位次越接近考生位次越靠前
+    return Math.abs(a.gap) - Math.abs(b.gap);
+  });
 
   return NextResponse.json({
     suggestions: scored.slice(0, 30),
