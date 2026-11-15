@@ -302,13 +302,20 @@ export async function POST(request: NextRequest) {
     // 应用决策树过滤
     const filtered = scored.filter((item) => matchesFilter(item, options || {}, province));
 
-    // 按 tier 排序
+    // 应用冲稳保策略
+    const strategized = applyTierStrategy(filtered, options?.tier_strategy);
+
+    // 按 tier 排序，同 tier 内按位次接近度排序
     const tierOrder: Record<string, number> = { "冲": 0, "小冲": 1, "稳": 2, "保": 3, "垫": 4 };
-    filtered.sort((a, b) => (tierOrder[a.tier] ?? 99) - (tierOrder[b.tier] ?? 99));
+    strategized.sort((a, b) => {
+      const tierDiff = (tierOrder[a.tier] ?? 99) - (tierOrder[b.tier] ?? 99);
+      if (tierDiff !== 0) return tierDiff;
+      return Math.abs(a.gap) - Math.abs(b.gap);
+    });
 
     return NextResponse.json({
-      suggestions: filtered.slice(0, 100),
-      total: filtered.length,
+      suggestions: strategized.slice(0, 100),
+      total: strategized.length,
       original_total: scored.length,
       profile: { province, rank, track, year },
       filter_applied: Object.keys(options || {}).length > 0,

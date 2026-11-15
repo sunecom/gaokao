@@ -331,18 +331,25 @@ function PlannerContent() {
                         ? Array.isArray(currentVal) && currentVal.includes(opt.value)
                         : currentVal === opt.value;
                       return (
-                        <button
-                          key={opt.value}
-                          onClick={() => handleFilterChange(q.id, opt.value, isMulti)}
-                          className={`text-xs px-2.5 py-1 rounded-full border transition-colors cursor-pointer ${
-                            selected
-                              ? "bg-sky-600 text-white border-sky-600"
-                              : "bg-white text-slate-600 border-slate-200 hover:border-sky-300"
-                          }`}
-                          title={opt.description}
-                        >
-                          {opt.label}
-                        </button>
+                        <div key={opt.value} className="relative group">
+                          <button
+                            onClick={() => handleFilterChange(q.id, opt.value, isMulti)}
+                            className={`text-xs px-2.5 py-1 rounded-full border transition-colors cursor-pointer ${
+                              selected
+                                ? "bg-sky-600 text-white border-sky-600"
+                                : "bg-white text-slate-600 border-slate-200 hover:border-sky-300"
+                            }`}
+                          >
+                            {opt.label}
+                          </button>
+                          {/* Tooltip */}
+                          <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-xs rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 whitespace-nowrap z-10 pointer-events-none">
+                            {opt.description}
+                            <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-1">
+                              <div className="border-4 border-transparent border-t-gray-900"></div>
+                            </div>
+                          </div>
+                        </div>
                       );
                     })}
                   </div>
