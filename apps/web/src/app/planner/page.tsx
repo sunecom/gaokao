@@ -1,6 +1,6 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { Suspense, useEffect, useState, useCallback } from "react";
 
 type Tier = "冲" | "小冲" | "稳" | "保" | "垫";
@@ -65,6 +65,7 @@ const TIER_ICONS: Record<Tier, string> = {
 };
 
 function PlannerContent() {
+  const router = useRouter();
   const params = useSearchParams();
   const province = params.get("province") || "";
   const score = params.get("score") || "";
@@ -211,6 +212,22 @@ function PlannerContent() {
 
   return (
     <div className="max-w-5xl mx-auto px-6 py-8">
+      {/* 返回按钮 */}
+      <div className="mb-4 flex items-center justify-between">
+        <button
+          onClick={() => router.back()}
+          className="inline-flex items-center gap-1.5 text-sm text-slate-600 hover:text-sky-700 px-3 py-2 rounded-lg hover:bg-slate-100 transition-colors cursor-pointer"
+        >
+          ← 返回修改
+        </button>
+        <a
+          href="/"
+          className="text-sm text-slate-500 hover:text-sky-700 px-3 py-2 rounded-lg hover:bg-slate-100 transition-colors"
+        >
+          重新填写成绩
+        </a>
+      </div>
+
       {/* 考生画像 */}
       <div className="bg-gradient-to-r from-sky-700 to-blue-900 text-white rounded-2xl p-8 mb-8">
         <h1 className="text-2xl font-bold mb-3">🎯 你的专属志愿方案</h1>

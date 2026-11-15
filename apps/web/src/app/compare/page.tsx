@@ -32,6 +32,14 @@ export default function ComparePage() {
 
   return (
     <div className="max-w-4xl mx-auto px-6 py-8">
+      <div className="mb-4">
+        <a
+          href="/"
+          className="inline-flex items-center gap-1.5 text-sm text-slate-600 hover:text-sky-700 px-3 py-2 rounded-lg hover:bg-slate-100 transition-colors"
+        >
+          ← 返回首页
+        </a>
+      </div>
       <h1 className="text-2xl font-bold text-slate-800 mb-6">🔄 院校对比</h1>
       <div className="grid grid-cols-2 gap-4 mb-8">
         <select value={schoolA} onChange={e => setSchoolA(e.target.value)}

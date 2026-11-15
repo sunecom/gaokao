@@ -16,6 +16,14 @@ const MAJORS = [
 export default function MajorsPage() {
   return (
     <div className="max-w-5xl mx-auto px-6 py-8">
+      <div className="mb-4">
+        <a
+          href="/"
+          className="inline-flex items-center gap-1.5 text-sm text-slate-600 hover:text-sky-700 px-3 py-2 rounded-lg hover:bg-slate-100 transition-colors"
+        >
+          ← 返回首页
+        </a>
+      </div>
       <h1 className="text-2xl font-bold text-slate-800 mb-6">📚 专业解读</h1>
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
