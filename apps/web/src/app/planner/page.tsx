@@ -75,6 +75,11 @@ function PlannerContent() {
 
   const [loading, setLoading] = useState(true);
   const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
+
+  // 暴露数据给全局，供导出使用
+  useEffect(() => {
+    (window as any).__gaokao_suggestions__ = suggestions;
+  }, [suggestions]);
   const [conversions, setConversions] = useState<ConversionResult[]>([]);
   const [totalCount, setTotalCount] = useState(0);
 
@@ -437,8 +442,18 @@ function PlannerContent() {
         </>
       )}
 
+      {/* 导出按钮 */}
+      <div className="mt-8 flex justify-center">
+        <button
+          onClick={() => exportToCSV(filters)}
+          className="px-6 py-3 bg-sky-600 hover:bg-sky-700 text-white font-semibold rounded-xl transition-colors cursor-pointer shadow-lg"
+        >
+          📥 导出志愿方案 (CSV)
+        </button>
+      </div>
+
       {/* 底部 */}
-      <div className="mt-10 p-4 bg-amber-50 border border-amber-200 rounded-xl text-sm text-amber-800">
+      <div className="mt-6 p-4 bg-amber-50 border border-amber-200 rounded-xl text-sm text-amber-800">
         <strong>⚠️ 提交前必核验</strong>
         <ul className="mt-2 space-y-1 list-disc list-inside text-amber-700">
           <li>核对各省考试院官方《招生计划汇编》</li>
@@ -450,6 +465,25 @@ function PlannerContent() {
       </div>
     </div>
   );
+}
+
+function exportToCSV(filters?: FilterSelections) {
+  const params = new URLSearchParams(window.location.search);
+  const province = params.get("province") || "";
+  const rank = params.get("rank") || "";
+  const year = params.get("year") || "2026";
+
+  if (!province || !rank) {
+    alert("缺少省份或位次信息");
+    return;
+  }
+
+  // 带上筛选条件，保证与网页结果一致
+  let url = `/api/export?province=${encodeURIComponent(province)}&rank=${rank}&year=${year}`;
+  if (filters && Object.keys(filters).length > 0) {
+    url += `&options=${encodeURIComponent(JSON.stringify(filters))}`;
+  }
+  window.location.href = url;
 }
 
 function getDemoSuggestions(): Suggestion[] {

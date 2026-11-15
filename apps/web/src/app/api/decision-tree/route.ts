@@ -47,13 +47,9 @@ function matchesFilter(
   options: DecisionTreeOptions,
   userProvince: string
 ): boolean {
-  // 调剂偏好
-  if (options.adjustment === "reject") {
-    // 不接受调剂：只显示录取概率高的（稳/保/垫）
-    if (["冲", "小冲"].includes(item.tier)) {
-      return false;
-    }
-  }
+  // 调剂偏好（不再直接排除冲，而是调整策略）
+  // 不接受调剂时，冲的比例降低，稳保垫比例提高
+  // 这个逻辑在 applyTierStrategy 中处理
 
   // 地点偏好（旧版兼容）
   if (options.location === "local" && item.province && item.province !== userProvince) {
@@ -204,19 +200,34 @@ function matchesFilter(
  */
 function applyTierStrategy(
   items: Suggestion[],
-  strategy?: "aggressive" | "balanced" | "conservative" | "safe"
+  strategy?: "aggressive" | "balanced" | "conservative" | "safe",
+  adjustment?: "accept" | "reject"
 ): Suggestion[] {
   if (!strategy) return items;
 
   // 策略比例：冲/小冲/稳/保/垫
-  const strategyRatios: Record<string, Record<string, number>> = {
-    aggressive: { "冲": 0.4, "小冲": 0.3, "稳": 0.2, "保": 0.08, "垫": 0.02 },
-    balanced: { "冲": 0.2, "小冲": 0.2, "稳": 0.3, "保": 0.2, "垫": 0.1 },
-    conservative: { "冲": 0.1, "小冲": 0.15, "稳": 0.35, "保": 0.3, "垫": 0.1 },
-    safe: { "冲": 0.05, "小冲": 0.1, "稳": 0.3, "保": 0.35, "垫": 0.2 },
+  // 不接受调剂时，冲的比例降低，稳保垫比例提高
+  const strategyRatios: Record<string, Record<string, Record<string, number>>> = {
+    aggressive: {
+      accept: { "冲": 0.4, "小冲": 0.3, "稳": 0.2, "保": 0.08, "垫": 0.02 },
+      reject: { "冲": 0.1, "小冲": 0.15, "稳": 0.35, "保": 0.3, "垫": 0.1 },
+    },
+    balanced: {
+      accept: { "冲": 0.2, "小冲": 0.2, "稳": 0.3, "保": 0.2, "垫": 0.1 },
+      reject: { "冲": 0.05, "小冲": 0.1, "稳": 0.4, "保": 0.3, "垫": 0.15 },
+    },
+    conservative: {
+      accept: { "冲": 0.1, "小冲": 0.15, "稳": 0.35, "保": 0.3, "垫": 0.1 },
+      reject: { "冲": 0.02, "小冲": 0.08, "稳": 0.4, "保": 0.35, "垫": 0.15 },
+    },
+    safe: {
+      accept: { "冲": 0.05, "小冲": 0.1, "稳": 0.3, "保": 0.35, "垫": 0.2 },
+      reject: { "冲": 0.01, "小冲": 0.04, "稳": 0.35, "保": 0.4, "垫": 0.2 },
+    },
   };
 
-  const ratios = strategyRatios[strategy];
+  const adj = adjustment || "accept";
+  const ratios = strategyRatios[strategy]?.[adj];
   if (!ratios) return items;
 
   // 按 tier 分组
@@ -309,7 +320,7 @@ export async function POST(request: NextRequest) {
     const filtered = scored.filter((item) => matchesFilter(item, options || {}, province));
 
     // 应用冲稳保策略
-    const strategized = applyTierStrategy(filtered, options?.tier_strategy);
+    const strategized = applyTierStrategy(filtered, options?.tier_strategy, options?.adjustment);
 
     // 按 tier 排序，同 tier 内按位次接近度排序
     const tierOrder: Record<string, number> = { "冲": 0, "小冲": 1, "稳": 2, "保": 3, "垫": 4 };
