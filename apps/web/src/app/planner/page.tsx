@@ -86,7 +86,7 @@ function PlannerContent() {
   // 科类英文→中文映射
   const trackNameMap: Record<string, string> = {
     physics: "物理类", history: "历史类",
-    science: "理科", arts: "文科", comprehensive: "综合改革",
+    science: "理科", arts: "文科", comprehensive: "综合",
   };
   const trackCN = trackNameMap[track] || track;
 

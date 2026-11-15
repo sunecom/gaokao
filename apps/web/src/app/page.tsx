@@ -32,6 +32,13 @@ export default function HomePage() {
     track: "physics",
     year: "2026",
   });
+
+  // 山东是新高考 3+3，自动切换科类
+  const handleProvinceChange = (province: string) => {
+    // 山东是新高考 3+3，自动切换为综合改革
+    const newTrack = province === "山东" ? "comprehensive" : form.track;
+    setForm({ ...form, province, track: newTrack });
+  };
   const [conversionPreview, setConversionPreview] = useState<ConversionPreview[]>([]);
   const [previewLoading, setPreviewLoading] = useState(false);
 
@@ -46,7 +53,7 @@ export default function HomePage() {
       try {
         const trackMap: Record<string, string> = {
           physics: "物理类", history: "历史类",
-          science: "理科", arts: "文科", comprehensive: "综合改革",
+          science: "理科", arts: "文科", comprehensive: "综合",
         };
         const res = await fetch(
           `/api/convert-rank?province=${form.province}&track=${trackMap[form.track] || "物理类"}&rank=${form.rank}&year=${form.year}`
@@ -95,7 +102,7 @@ export default function HomePage() {
                 <label className="block text-sm font-medium text-slate-700 mb-1">省份</label>
                 <select
                   value={form.province}
-                  onChange={(e) => setForm({ ...form, province: e.target.value })}
+                  onChange={(e) => handleProvinceChange(e.target.value)}
                   className="w-full px-3 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 outline-none"
                   required
                 >
@@ -113,6 +120,7 @@ export default function HomePage() {
                   value={form.track}
                   onChange={(e) => setForm({ ...form, track: e.target.value })}
                   className="w-full px-3 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 outline-none"
+                  disabled={form.province === "山东"}
                 >
                   {SUBJECT_TRACKS.map((t) => (
                     <option key={t.value} value={t.value}>{t.label}</option>
@@ -167,6 +175,7 @@ export default function HomePage() {
                 onChange={(e) => setForm({ ...form, year: e.target.value })}
                 className="w-full px-3 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 outline-none"
               >
+                <option value="2027">2027 年（模拟）</option>
                 <option value="2026">2026 年</option>
                 <option value="2025">2025 年</option>
                 <option value="2024">2024 年</option>

@@ -98,8 +98,17 @@ export async function GET(request: NextRequest) {
   // 目标年份对应的等效分数
   const results: ConversionResult[] = [];
 
-  // 需要换算的往年年份
-  const targetYears = ["2025", "2024"];
+  // 动态生成目标年份：当前年份往前推
+  const targetYears: string[] = [];
+  const startYear = parseInt(year);
+  for (let y = startYear; y >= startYear - 2 && y >= 2022; y--) {
+    targetYears.push(String(y));
+  }
+  
+  // 2027年及以后用最新真实数据模拟
+  if (startYear > 2026) {
+    targetYears.push("2026");
+  }
 
   for (const targetYear of targetYears) {
     const table = loadRankTable(province, track, targetYear);
