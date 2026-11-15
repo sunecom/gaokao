@@ -169,6 +169,7 @@ function matchesFilter(
         if (t === "politics_law") return category.includes("政法");
         if (t === "agriculture") return category.includes("农林");
         if (t === "language") return category.includes("语言") || category.includes("外语");
+        if (t === "military_police") return category.includes("军警");
         return true;
       });
 
@@ -309,6 +310,7 @@ export async function POST(request: NextRequest) {
         risk: "请核对招生章程和计划变化",
         school_type: item.school_type,
         school_tags: item.school_tags || [],
+        school_category: item.school_category || "",
         school_province: item.school_province || "",
         major_category: item.major_category || "",
         tuition: item.tuition || 0,

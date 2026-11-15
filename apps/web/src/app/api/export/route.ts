@@ -22,6 +22,7 @@ interface Suggestion {
   gap_ratio: number;
   school_type?: string;
   school_tags?: string[];
+  school_category?: string;
   school_province?: string;
   tuition?: number;
 }
@@ -89,6 +90,26 @@ function matchesFilter(item: Suggestion, options: DecisionTreeOptions, userProvi
         if (level === "double_first") return tags.includes("985") || tags.includes("211") || tags.includes("double_first");
         if (level === "provincial") return type === "provincial_key" || type === "公办";
         if (level === "private") return type === "private" || type === "民办";
+        return true;
+      });
+      if (!has) return false;
+    }
+  }
+
+  // 院校类型
+  if (options.school_type && options.school_type.length > 0) {
+    const category = item.school_category || "";
+    if (category) {
+      const has = options.school_type.some((t) => {
+        if (t === "comprehensive") return category.includes("综合");
+        if (t === "science_engineering") return category.includes("理工") || category.includes("工科");
+        if (t === "normal") return category.includes("师范");
+        if (t === "medical") return category.includes("医药") || category.includes("医学");
+        if (t === "finance_economics") return category.includes("财经") || category.includes("经济");
+        if (t === "politics_law") return category.includes("政法");
+        if (t === "agriculture") return category.includes("农林");
+        if (t === "language") return category.includes("语言") || category.includes("外语");
+        if (t === "military_police") return category.includes("军警");
         return true;
       });
       if (!has) return false;
@@ -212,6 +233,7 @@ export async function GET(request: NextRequest) {
         gap_ratio: Math.round(gapRatio * 1000) / 1000,
         school_type: item.school_type,
         school_tags: item.school_tags || [],
+        school_category: item.school_category || "",
         school_province: item.school_province || extra?.province || "",
         tuition: item.tuition || 0,
       };

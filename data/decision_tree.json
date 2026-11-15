@@ -53,7 +53,8 @@
         { "value": "finance_economics", "label": "财经类", "description": "以财经学科为特色的院校" },
         { "value": "politics_law", "label": "政法类", "description": "以政法学科为特色的院校" },
         { "value": "agriculture", "label": "农林类", "description": "以农林学科为特色的院校" },
-        { "value": "language", "label": "语言类", "description": "以外语为特色的院校" }
+        { "value": "language", "label": "语言类", "description": "以外语为特色的院校" },
+        { "value": "military_police", "label": "军警类", "description": "军校/公安/警察/军医类院校（需政审体检）" }
       ]
     },
     {
