@@ -1,0 +1,85 @@
+{
+  "questions": [
+    {
+      "id": "adjustment",
+      "title": "是否接受调剂？",
+      "description": "如果所报专业已满，是否愿意被调剂到其他专业？",
+      "type": "single",
+      "options": [
+        { "value": "accept", "label": "接受调剂", "description": "增加录取概率，但可能被调剂到冷门专业" },
+        { "value": "reject", "label": "不接受调剂", "description": "只报考把握大的专业，避免被调剂" }
+      ]
+    },
+
+    {
+      "id": "major_direction",
+      "title": "专业方向",
+      "description": "你对哪个领域更感兴趣？",
+      "type": "multi",
+      "options": [
+        { "value": "engineering", "label": "工科", "description": "计算机、电子、机械、土木等" },
+        { "value": "science", "label": "理科", "description": "数学、物理、化学、生物等基础学科" },
+        { "value": "medicine", "label": "医学", "description": "临床、口腔、药学等" },
+        { "value": "business", "label": "商科", "description": "经济、金融、会计、管理等" },
+        { "value": "arts", "label": "文科", "description": "中文、历史、哲学、外语等" },
+        { "value": "law", "label": "法学", "description": "法学、政治学等" },
+        { "value": "education", "label": "师范", "description": "教育学、心理学等" },
+        { "value": "agriculture", "label": "农林", "description": "农学、林学、园艺等" }
+      ]
+    },
+    {
+      "id": "school_level",
+      "title": "院校层次",
+      "description": "你希望考入什么层次的院校？",
+      "type": "multi",
+      "options": [
+        { "value": "985", "label": "985 高校", "description": "国内顶尖名校" },
+        { "value": "211", "label": "211 高校", "description": "重点建设高校" },
+        { "value": "double_first", "label": "双一流", "description": "双一流建设高校（含 985/211）" },
+        { "value": "provincial", "label": "省属重点", "description": "各省属重点本科院校" },
+        { "value": "private", "label": "民办本科", "description": "民办本科院校" }
+      ]
+    },
+    {
+      "id": "tuition_budget",
+      "title": "学费预算",
+      "description": "你能够承受的年学费范围是？",
+      "type": "single",
+      "options": [
+        { "value": "low", "label": "5000 元以下", "description": "公办院校普通专业" },
+        { "value": "medium", "label": "5000-15000 元", "description": "公办热门专业或中外合作" },
+        { "value": "high", "label": "15000 元以上", "description": "民办或高收费项目" },
+        { "value": "no_limit", "label": "不考虑学费", "description": "优先选学校和专业的质量" }
+      ]
+    }
+  ],
+  "filter_rules": {
+    "adjustment": {
+      "accept": { "accept_adjustment": true },
+      "reject": { "accept_adjustment": false }
+    },
+    "major_direction": {
+      "engineering": { "major_category": ["computer", "electronic", "mechanical", "civil"] },
+      "science": { "major_category": ["math", "physics", "chemistry", "biology"] },
+      "medicine": { "major_category": ["clinical", "stomatology", "pharmacy"] },
+      "business": { "major_category": ["economics", "finance", "accounting", "management"] },
+      "arts": { "major_category": ["chinese", "history", "philosophy", "foreign_language"] },
+      "law": { "major_category": ["law", "political_science"] },
+      "education": { "major_category": ["education", "psychology"] },
+      "agriculture": { "major_category": ["agriculture", "forestry", "horticulture"] }
+    },
+    "school_level": {
+      "985": { "school_tags": ["985"] },
+      "211": { "school_tags": ["211"] },
+      "double_first": { "school_tags": ["985", "211", "double_first"] },
+      "provincial": { "school_type": "provincial_key" },
+      "private": { "school_type": "private" }
+    },
+    "tuition_budget": {
+      "low": { "max_tuition": 5000 },
+      "medium": { "max_tuition": 15000 },
+      "high": { "max_tuition": 999999 },
+      "no_limit": { "max_tuition": 999999 }
+    }
+  }
+}

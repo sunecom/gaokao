@@ -1,0 +1,212 @@
+{
+  "title": "性格与职业探索测试",
+  "description": "通过 8 道场景题，帮你找到最适合的职业方向和大学专业",
+  "questions": [
+    {
+      "id": "q1",
+      "text": "你更喜欢做哪类事情？",
+      "options": [
+        { "value": "tech", "label": "研究技术原理、编程、拆装设备", "traits": ["技术型", "逻辑型"] },
+        { "value": "creative", "label": "写作、画画、设计、音乐创作", "traits": ["艺术型", "创新型"] },
+        { "value": "people", "label": "与人交流、组织活动、帮助他人", "traits": ["社交型", "服务型"] },
+        { "value": "business", "label": "策划项目、管理团队、谈判交易", "traits": ["企业型", "管理型"] }
+      ]
+    },
+    {
+      "id": "q2",
+      "text": "面对一个复杂问题时，你通常怎么处理？",
+      "options": [
+        { "value": "analyze", "label": "拆解分析，一步步找到根源", "traits": ["分析型", "严谨型"] },
+        { "value": "intuition", "label": "凭直觉和整体把握做判断", "traits": ["直觉型", "全局型"] },
+        { "value": "collaborate", "label": "找人一起讨论，集思广益", "traits": ["协作型", "沟通型"] },
+        { "value": "execute", "label": "快速行动，在实践中调整", "traits": ["执行型", "实践型"] }
+      ]
+    },
+    {
+      "id": "q3",
+      "text": "你更喜欢什么样的工作环境？",
+      "options": [
+        { "value": "lab", "label": "安静专注的实验室或工位", "traits": ["专注型", "独立型"] },
+        { "value": "team", "label": "热闹开放的团队协作空间", "traits": ["合作型", "外向型"] },
+        { "value": "field", "label": "户外或现场，不是坐办公室", "traits": ["实践型", "探险型"] },
+        { "value": "flex", "label": "自由灵活，不受时间和地点限制", "traits": ["自由型", "创新型"] }
+      ]
+    },
+    {
+      "id": "q4",
+      "text": "你在团队中通常扮演什么角色？",
+      "options": [
+        { "value": "leader", "label": "领导者——定方向、分配任务", "traits": ["领导型", "决策型"] },
+        { "value": "expert", "label": "技术专家——解决最难的问题", "traits": ["专业型", "钻研型"] },
+        { "value": "coordinator", "label": "协调者——沟通各方、化解分歧", "traits": ["协调型", "外交型"] },
+        { "value": "executor", "label": "执行者——把事情做到底", "traits": ["执行型", "可靠型"] }
+      ]
+    },
+    {
+      "id": "q5",
+      "text": "你对以下哪个领域更感兴趣？",
+      "options": [
+        { "value": "science", "label": "科学发现：探索未知的自然规律", "traits": ["探索型", "理论型"] },
+        { "value": "engineering", "label": "工程创造：用技术解决实际问题", "traits": ["工程型", "实干型"] },
+        { "value": "society", "label": "社会治理：教育、法律、公共事务", "traits": ["社会型", "责任型"] },
+        { "value": "commerce", "label": "商业创新：产品、市场、创业", "traits": ["商业型", "开拓型"] }
+      ]
+    },
+    {
+      "id": "q6",
+      "text": "你对数字和数据的敏感度如何？",
+      "options": [
+        { "value": "high", "label": "很喜欢——擅长数学、统计、数据分析", "traits": ["数理型", "精准型"] },
+        { "value": "medium", "label": "还行——必要时可以用但不喜欢天天做", "traits": ["均衡型"] },
+        { "value": "low", "label": "不喜欢——更偏好文字、图像、创意", "traits": ["感性型", "创意型"] }
+      ]
+    },
+    {
+      "id": "q7",
+      "text": "你对“稳定”和“挑战”怎么看？",
+      "options": [
+        { "value": "stable", "label": "偏好稳定、规律、可预期的工作", "traits": ["稳健型", "保守型"] },
+        { "value": "balance", "label": "希望稳定中有适度的变化和成长", "traits": ["平衡型"] },
+        { "value": "challenge", "label": "渴望不断挑战新事物，不怕风险", "traits": ["冒险型", "进取型"] }
+      ]
+    },
+    {
+      "id": "q8",
+      "text": "你未来 10 年的理想生活状态是？",
+      "options": [
+        { "value": "expert", "label": "成为某个领域的顶尖专家", "traits": ["专业型", "成就型"] },
+        { "value": "leader", "label": "带领团队做大事，拥有影响力", "traits": ["领导型", "影响力型"] },
+        { "value": "freedom", "label": "自由职业，时间自主，做喜欢的事", "traits": ["自由型", "自主型"] },
+        { "value": "balance", "label": "工作生活平衡，稳定的幸福", "traits": ["平衡型", "安定型"] }
+      ]
+    }
+  ],
+  "career_mapping": [
+    {
+      "id": "ai_engineer",
+      "title": "AI 算法工程师 / 数据科学家",
+      "description": "开发智能系统，让机器学会思考和决策。AI 时代最前沿的技术岗。",
+      "match_traits": ["技术型", "逻辑型", "数理型", "分析型", "钻研型", "工程型", "探索型"],
+      "recommended_majors": ["人工智能", "计算机科学与技术", "数据科学与大数据技术", "数学与应用数学", "统计学"],
+      "salary_range": "15K-50K/月",
+      "demand_trend": "🔥 高速增长"
+    },
+    {
+      "id": "software_engineer",
+      "title": "软件工程师 / 全栈开发者",
+      "description": "开发网站、App、系统软件，是数字世界的建设者。",
+      "match_traits": ["技术型", "逻辑型", "工程型", "执行型", "实践型", "专注型"],
+      "recommended_majors": ["计算机科学与技术", "软件工程", "信息工程", "物联网工程"],
+      "salary_range": "12K-40K/月",
+      "demand_trend": "🔥 持续增长"
+    },
+    {
+      "id": "product_manager",
+      "title": "产品经理 / 项目经理",
+      "description": "定义产品方向，协调设计、技术、运营，把想法变成现实。",
+      "match_traits": ["企业型", "管理型", "沟通型", "全局型", "领导型", "商业型", "协调型"],
+      "recommended_majors": ["计算机科学与技术", "信息管理与信息系统", "工商管理", "市场营销"],
+      "salary_range": "15K-35K/月",
+      "demand_trend": "📈 稳定增长"
+    },
+    {
+      "id": "designer",
+      "title": "设计师 / 创意总监",
+      "description": "用视觉和体验创造价值，涵盖 UI/UX、平面、工业设计。",
+      "match_traits": ["艺术型", "创新型", "创意型", "自由型", "感性型"],
+      "recommended_majors": ["视觉传达设计", "数字媒体艺术", "工业设计", "环境设计"],
+      "salary_range": "10K-30K/月",
+      "demand_trend": "📈 稳定增长"
+    },
+    {
+      "id": "doctor",
+      "title": "医生 / 医学研究员",
+      "description": "救死扶伤，探索生命科学的奥秘。受人尊敬的稳定职业。",
+      "match_traits": ["服务型", "严谨型", "责任型", "探索型", "稳健型", "专注型"],
+      "recommended_majors": ["临床医学", "口腔医学", "药学", "医学影像学"],
+      "salary_range": "10K-50K/月",
+      "demand_trend": "✅ 长期稳定"
+    },
+    {
+      "id": "teacher",
+      "title": "教师 / 教育工作者",
+      "description": "传道授业解惑，培养下一代。稳定有成就感。",
+      "match_traits": ["服务型", "社交型", "责任型", "社会型", "稳健型", "平衡型"],
+      "recommended_majors": ["教育学", "汉语言文学", "数学与应用数学(师范)", "英语(师范)", "物理学(师范)"],
+      "salary_range": "8K-25K/月",
+      "demand_trend": "✅ 长期稳定"
+    },
+    {
+      "id": "lawyer",
+      "title": "律师 / 法官 / 法务",
+      "description": "维护法律正义，处理法律事务。逻辑与口才的完美结合。",
+      "match_traits": ["分析型", "严谨型", "社会型", "责任型", "沟通型", "均衡型"],
+      "recommended_majors": ["法学", "知识产权", "政治学与行政学"],
+      "salary_range": "10K-40K/月",
+      "demand_trend": "📈 稳定增长"
+    },
+    {
+      "id": "accountant",
+      "title": "会计师 / 审计 / 金融分析",
+      "description": "与数字打交道，为企业财务和投资决策提供支持。",
+      "match_traits": ["数理型", "精准型", "稳健型", "分析型", "严谨型", "可靠型"],
+      "recommended_majors": ["会计学", "财务管理", "金融学", "经济学", "审计学"],
+      "salary_range": "10K-30K/月",
+      "demand_trend": "✅ 长期稳定"
+    },
+    {
+      "id": "entrepreneur",
+      "title": "创业者 / 企业管理者",
+      "description": "从 0 到 1 创造商业价值，带领团队攻城略地。",
+      "match_traits": ["企业型", "管理型", "领导型", "开拓型", "进取型", "冒险型", "商业型", "决策型"],
+      "recommended_majors": ["工商管理", "市场营销", "金融学", "经济学"],
+      "salary_range": "不确定（上不封顶）",
+      "demand_trend": "🌟 适合敢闯的人"
+    },
+    {
+      "id": "civil_servant",
+      "title": "公务员 / 事业单位",
+      "description": "稳定的体制内工作，服务社会公共事务。",
+      "match_traits": ["稳健型", "服务型", "责任型", "社会型", "平衡型", "可靠型"],
+      "recommended_majors": ["行政管理", "公共事业管理", "法学", "汉语言文学", "经济学"],
+      "salary_range": "6K-20K/月",
+      "demand_trend": "✅ 长期稳定"
+    },
+    {
+      "id": "media_worker",
+      "title": "媒体人 / 自媒体 / 记者",
+      "description": "写作、报道、内容创作。在信息时代传递价值。",
+      "match_traits": ["艺术型", "创新型", "创意型", "自由型", "感性型", "社交型", "独立型"],
+      "recommended_majors": ["新闻学", "传播学", "汉语言文学", "广播电视编导", "数字媒体技术"],
+      "salary_range": "8K-30K/月",
+      "demand_trend": "📈 增长中"
+    },
+    {
+      "id": "psychologist",
+      "title": "心理咨询师 / 社会工作者",
+      "description": "帮助人们解决心理困扰，提升幸福感。",
+      "match_traits": ["服务型", "社交型", "感性型", "协调型", "社会型", "责任型"],
+      "recommended_majors": ["心理学", "应用心理学", "社会学"],
+      "salary_range": "8K-25K/月",
+      "demand_trend": "📈 增长中"
+    },
+    {
+      "id": "scientist",
+      "title": "科研工作者 / 大学教授",
+      "description": "探索未知，发表论文，培养下一代科研人才。",
+      "match_traits": ["探索型", "理论型", "分析型", "钻研型", "专业型", "成就型", "专注型", "独立型"],
+      "recommended_majors": ["数学与应用数学", "物理学", "化学", "生物科学", "材料科学与工程"],
+      "salary_range": "10K-30K/月",
+      "demand_trend": "✅ 长期稳定"
+    },
+    {
+      "id": "sports_pro",
+      "title": "体育从业者 / 健身教练",
+      "description": "用体育精神和专业知识影响他人，健康产业前景广阔。",
+      "match_traits": ["实践型", "探险型", "外向型", "执行型", "社交型"],
+      "recommended_majors": ["体育教育", "运动训练", "社会体育指导与管理", "运动人体科学"],
+      "salary_range": "8K-25K/月",
+      "demand_trend": "📈 增长中"
+    }
+  ]
+}

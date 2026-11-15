@@ -1,0 +1,45 @@
+{
+  "title": "校内排名→省位次估算",
+  "description": "根据校内排名和高中层次，估算省位次范围。结果仅供参考，实际高考成绩受多种因素影响。",
+  "school_levels": [
+    {
+      "id": "provincial_key",
+      "label": "省级重点高中",
+      "description": "省会城市或全省招生的顶级高中（如郑州一中、省实验中学等）",
+      "multiplier_min": 0.05,
+      "multiplier_max": 0.15,
+      "confidence_note": "估算较为可靠，历史数据波动小"
+    },
+    {
+      "id": "municipal_key",
+      "label": "市级重点高中",
+      "description": "地市级的重点中学，教学质量较好",
+      "multiplier_min": 0.2,
+      "multiplier_max": 0.4,
+      "confidence_note": "估算参考价值中等"
+    },
+    {
+      "id": "district_key",
+      "label": "区级重点/普通高中",
+      "description": "区县级重点或普通高中",
+      "multiplier_min": 0.5,
+      "multiplier_max": 0.9,
+      "confidence_note": "估算偏差可能较大，仅供参考"
+    },
+    {
+      "id": "ordinary",
+      "label": "普通高中",
+      "description": "一般普通高中",
+      "multiplier_min": 0.9,
+      "multiplier_max": 1.8,
+      "confidence_note": "仅作粗略参考，建议以实际成绩为准"
+    }
+  ],
+  "province_configs": {
+    "河南": {
+      "physics": { "total_students_approx": 400000, "note": "河南物理类考生约40万人" },
+      "history": { "total_students_approx": 300000, "note": "河南历史类考生约30万人" }
+    }
+  },
+  "disclaimer": "校内排名→省位次的换算基于历史经验和学校层次的平均水平估算，不是精确数据。实际高考成绩受试题难度、临场发挥、学校教学质量差异等多种因素影响。建议仅作为初步定位参考。"
+}

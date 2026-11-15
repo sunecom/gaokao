@@ -1,0 +1,24 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: gaokao-planner-web
+    restart: unless-stopped
+    ports:
+      - "4000:3000"
+    environment:
+      - NODE_ENV=production
+      - NEXT_TELEMETRY_DISABLED=1
+    volumes:
+      - ./data:/app/data
+    networks:
+      - gaokao-net
+
+volumes:
+  gaokao-data:
+    driver: local
+
+networks:
+  gaokao-net:
+    driver: bridge

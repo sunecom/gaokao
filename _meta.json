@@ -1,0 +1,17 @@
+{
+  "slug": "gaokao-planner",
+  "name": "高考填报规划",
+  "version": "1.0.0",
+  "description": "AI 驱动的智能高考志愿填报决策系统",
+  "author": "AiToMoney 团队",
+  "created": "2026-06-06",
+  "status": "active",
+  "repo": "workspace/skills/gaokao-planner",
+  "feishu_folder": "https://jcngahhy3yr0.feishu.cn/drive/folder/KDtKfAknqlVOyddhRXUczmwInle",
+  "feishu_doc": "https://www.feishu.cn/docx/PF0idZojKo4sKfxSMh7cI0MtnsD",
+  "tech_stack": ["Next.js", "Tailwind CSS", "Python", "Qwen3.5-plus", "SQLite"],
+  "milestones": {
+    "mvp": "2026-06-07（提前完成）",
+    "v2": "2026-07-01"
+  }
+}

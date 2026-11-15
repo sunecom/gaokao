@@ -1,0 +1,152 @@
+[
+  {
+    "school_name": "国防科技大学",
+    "campus_code": "NUDT_MAIN",
+    "tuition": 0,
+    "location": "湖南长沙",
+    "major_restrictions": {
+      "计算机科学与技术": {
+        "vision": "无色盲色弱",
+        "height": null,
+        "single_subject": null,
+        "political_review": true
+      },
+      "软件工程": {
+        "vision": "无色盲色弱",
+        "height": null,
+        "single_subject": null,
+        "political_review": true
+      },
+      "人工智能": {
+        "vision": "无色盲色弱",
+        "height": null,
+        "single_subject": null,
+        "political_review": true
+      }
+    }
+  },
+  {
+    "school_name": "陆军工程大学",
+    "campus_code": "AMEU_MAIN",
+    "tuition": 0,
+    "location": "江苏南京",
+    "major_restrictions": {
+      "所有专业": {
+        "vision": "无色盲色弱",
+        "height": "≥162cm",
+        "single_subject": null,
+        "political_review": true
+      }
+    }
+  },
+  {
+    "school_name": "海军军医大学",
+    "campus_code": "NMU_MAIN",
+    "tuition": 0,
+    "location": "上海",
+    "major_restrictions": {
+      "临床医学": {
+        "vision": "无色盲色弱",
+        "height": null,
+        "single_subject": null,
+        "political_review": true
+      },
+      "口腔医学": {
+        "vision": "无色盲色弱",
+        "height": null,
+        "single_subject": null,
+        "political_review": true
+      }
+    }
+  },
+  {
+    "school_name": "空军军医大学",
+    "campus_code": "AMU_MAIN",
+    "tuition": 0,
+    "location": "陕西西安",
+    "major_restrictions": {
+      "临床医学": {
+        "vision": "无色盲色弱",
+        "height": null,
+        "single_subject": null,
+        "political_review": true
+      }
+    }
+  },
+  {
+    "school_name": "中国人民公安大学",
+    "campus_code": "PPUC_MAIN",
+    "tuition": 4500,
+    "location": "北京",
+    "major_restrictions": {
+      "侦查学": {
+        "vision": "裸眼视力≥4.8",
+        "height": "男≥170cm,女≥160cm",
+        "single_subject": null,
+        "political_review": true
+      },
+      "治安学": {
+        "vision": "裸眼视力≥4.8",
+        "height": "男≥170cm,女≥160cm",
+        "single_subject": null,
+        "political_review": true
+      }
+    }
+  },
+  {
+    "school_name": "中国刑事警察学院",
+    "campus_code": "CIPUC_MAIN",
+    "tuition": 4500,
+    "location": "辽宁沈阳",
+    "major_restrictions": {
+      "刑事科学技术": {
+        "vision": "无色盲色弱",
+        "height": "男≥170cm,女≥160cm",
+        "single_subject": null,
+        "political_review": true
+      }
+    }
+  },
+  {
+    "school_name": "厦门大学",
+    "campus_code": "XMU_MAIN",
+    "tuition": 5500,
+    "location": "福建厦门",
+    "major_restrictions": {}
+  },
+  {
+    "school_name": "厦门大学(马来西亚分校)",
+    "campus_code": "XMU_MALAYSIA",
+    "tuition": 300000,
+    "location": "马来西亚",
+    "major_restrictions": {}
+  },
+  {
+    "school_name": "北京师范大学(珠海校区)",
+    "campus_code": "BNU_ZHUHAI",
+    "tuition": 25000,
+    "location": "广东珠海",
+    "major_restrictions": {}
+  },
+  {
+    "school_name": "哈尔滨工业大学(深圳)",
+    "campus_code": "HIT_SHENZHEN",
+    "tuition": 6000,
+    "location": "广东深圳",
+    "major_restrictions": {}
+  },
+  {
+    "school_name": "山东大学(威海)",
+    "campus_code": "SDU_WEIHAI",
+    "tuition": 5500,
+    "location": "山东威海",
+    "major_restrictions": {}
+  },
+  {
+    "school_name": "东北大学(秦皇岛分校)",
+    "campus_code": "NEU_QINHUANGDAO",
+    "tuition": 5500,
+    "location": "河北秦皇岛",
+    "major_restrictions": {}
+  }
+]
